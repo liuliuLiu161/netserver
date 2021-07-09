@@ -20,6 +20,7 @@ const Main: React.FC<{
 					y: 20 * Math.random(),
 					width: 100,
 					height: 60,
+					zIndex: Object.keys(nodes).length,
 				},
 			},
 		});
@@ -32,6 +33,8 @@ const Main: React.FC<{
 			return <Node key={code} canvas={canvas} node={item} code={code} />;
 		});
 	};
+
+	// const
 
 	useEffect(() => {
 		if (canvasRef.current) {
@@ -47,7 +50,7 @@ const Main: React.FC<{
 			<div className="menuList">
 				<div onClick={addNode}>ADD</div>
 			</div>
-			<DraggerContainer dispatch={dispatch} canvasRef={canvasRef}>
+			<DraggerContainer dispatch={dispatch} currentNode={nodes[currentNode?.data.code || ""] || null} canvasRef={canvasRef}>
 				<canvas width={document.body.clientWidth} height={0.9 * document.body.clientHeight} ref={canvasRef} />
 				{canvas ? renderNodes(canvas, nodes) : null}
 				<Dragger node={currentNode} />

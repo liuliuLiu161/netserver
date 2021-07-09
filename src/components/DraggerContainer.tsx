@@ -3,8 +3,9 @@ import { useState } from "react";
 const DraggerContainer: React.FC<{
 	canvasRef: React.RefObject<HTMLCanvasElement>;
 	dispatch: React.Dispatch<Components.ActionParams<any>>;
+	currentNode: Components.CurrentNode | null;
 }> = (props) => {
-	const { canvasRef, children, dispatch } = props;
+	const { canvasRef, children, dispatch, currentNode } = props;
 
 	const [isMoving, setMove] = useState(false);
 
@@ -53,8 +54,26 @@ const DraggerContainer: React.FC<{
 		});
 	};
 
+	const handleMouseUp = () => {
+		setMove(false);
+		if (!currentNode) return;
+		const { style } = currentNode;
+		const { x, y } = style;
+		dispatch({
+			type: "UPDATE_CURRENT_NODE",
+			payload: {
+				...currentNode,
+				style: {
+					...style,
+					x,
+					y,
+				},
+			},
+		});
+	};
+
 	return (
-		<div className="canvasContainer" onMouseDown={handleMouseDown} onMouseUp={() => setMove(false)} onMouseMove={handleMove}>
+		<div className="canvasContainer" onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseMove={handleMove}>
 			{children}
 		</div>
 	);

@@ -1,8 +1,37 @@
 declare namespace Common {
 	interface NodeData {
 		code: string;
-		previous: string[];
-		next: string[];
+		previous: {
+			code: string;
+			pointCode: string;
+			style: React.CSSProperties;
+		}[];
+		next: {
+			code: string;
+			pointCode: string;
+			style: React.CSSProperties;
+		}[];
+		point?: {
+			code: string;
+			position: number[];
+			path: string;
+			style: React.CSSProperties;
+		}[];
+	}
+
+	interface NodeStyle {
+		height: number;
+		width: number;
+		x: number;
+		y: number;
+		zIndex: number;
+		color?: string;
+	}
+
+	// type Node = NodeStyle & NodeData;
+	interface Nodes {
+		style: NodeStyle;
+		data: NodeData;
 	}
 
 	//Effective fucntion of reducer cases
@@ -15,20 +44,6 @@ declare namespace Common {
 		PATH_COLOR,
 		FONT_COLOR,
 		2,
-	}
-
-	interface NodeStyle {
-		height: number;
-		width: number;
-		x: number;
-		y: number;
-		color?: string;
-	}
-
-	// type Node = NodeStyle & NodeData;
-	interface Nodes {
-		style: NodeStyle;
-		data: NodeData;
 	}
 
 	interface NodeProps<S> {
@@ -57,6 +72,12 @@ declare namespace Components {
 	interface CanvasContext {
 		canvas: CanvasRenderingContext2D;
 	}
+
+	interface CurrentNode extends Common.Nodes {
+		xIndex: number;
+		yIndex: number;
+	}
+
 	interface NodesOffsetSortedItem {
 		code: string;
 		offset: number;
@@ -69,7 +90,7 @@ declare namespace Components {
 			};
 			cacheData: unknown;
 		}>;
-		currentNode: Common.Nodes | null;
+		currentNode: CurrentNode | null;
 		attr: {
 			clickX: number;
 			clickY: number;
@@ -99,7 +120,7 @@ declare namespace Components {
 		}
 	) => ConnectComponent<P>;
 
-	type ActionType = "ADD_NODE" | "DELETE_NODE" | "UPDATE_NODE" | "UPDATE_CANVAS_ATTR" | "INIT_BASIC_CANVAS" | "SELECT_NODE";
+	type ActionType = "ADD_NODE" | "DELETE_NODE" | "UPDATE_NODE" | "UPDATE_CANVAS_ATTR" | "INIT_BASIC_CANVAS" | "SELECT_NODE" | "UPDATE_CURRENT_NODE";
 
 	interface ActionParams<P = any> {
 		type: ActionType;

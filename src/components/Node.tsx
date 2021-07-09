@@ -7,8 +7,6 @@ export const Node: React.FC<Common.NodeProps<Common.NodeContextState>> = (props)
 	// const state = l
 	// console.log(props);
 	useLayoutEffect(() => {
-		console.log("trigger");
-
 		const ctx = canvas;
 		if (!ctx) {
 			return;

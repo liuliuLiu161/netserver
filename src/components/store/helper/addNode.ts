@@ -13,9 +13,10 @@ const addNode: Common.ReducerHelper<{ style: Common.NodeStyle }> = (payload, sta
 		},
 	};
 	const { x, y } = style;
+	const nodesCount = Object.keys(state.nodes).length;
 	insertOffsetArray({ code, offset: x }, state.nodesOffset.xArray);
 	insertOffsetArray({ code, offset: y }, state.nodesOffset.yArray);
 	state.nodes[code] = node;
-	state.currentNode = node;
+	state.currentNode = { ...node, xIndex: nodesCount, yIndex: nodesCount };
 };
 export default addNode;

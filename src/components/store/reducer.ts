@@ -1,7 +1,7 @@
 import produce from "immer";
 // import * as uuid from "uuid";
 import addNode from "./helper/addNode";
-import updateNode from "./helper/updateNode";
+import { updateCurrentNode, updateNodes } from "./helper/updateNode";
 const reduce = (draft: Components.ContextState, action: ReturnType<Components.ContextAction>) => {
 	const result = produce(draft, (state: any) => {
 		const { payload, type } = action;
@@ -20,7 +20,11 @@ const reduce = (draft: Components.ContextState, action: ReturnType<Components.Co
 				break;
 			case "UPDATE_NODE": {
 				// const code = state.currentNode?.data.code;
-				updateNode(payload, state);
+				updateNodes(payload, state);
+				break;
+			}
+			case "UPDATE_CURRENT_NODE": {
+				updateCurrentNode(payload, state);
 				break;
 			}
 			case "UPDATE_CANVAS_ATTR": {
@@ -40,6 +44,7 @@ const reduce = (draft: Components.ContextState, action: ReturnType<Components.Co
 			default:
 				break;
 		}
+		// console.log(JSON.stringify(state));
 	});
 
 	return result;

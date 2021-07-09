@@ -8,6 +8,7 @@ export const sampleData: { [key: string]: Common.Nodes } = {
 			width: 80,
 			x: 30,
 			y: 30,
+			zIndex: 0,
 			color: Colors.FONT_COLOR,
 		},
 		data: {

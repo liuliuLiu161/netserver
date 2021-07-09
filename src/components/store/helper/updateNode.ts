@@ -1,4 +1,6 @@
-const updateNode: Common.ReducerHelper<{ x: number; y: number }> = (payload, state) => {
+import { binarySearch } from "./common";
+
+export const updateNodes: Common.ReducerHelper<{ x: number; y: number }> = (payload, state) => {
 	const { currentNode } = state;
 	const { x, y } = payload;
 
@@ -7,18 +9,59 @@ const updateNode: Common.ReducerHelper<{ x: number; y: number }> = (payload, sta
 		// console.log(JSON.stringify(state.nodesOffset.xArray));
 	}
 	const code = currentNode.data.code;
-	const { style } = currentNode;
-	const { x: oldx, y: oldy } = style;
+
 	state.nodes[code].style = {
 		...state.nodes[code].style,
 		x,
 		y,
 	};
-	currentNode.style = {
-		...currentNode.style,
-		x,
-		y,
-	};
+
 	// const
 };
-export default updateNode;
+
+export const updateCurrentNode: Common.ReducerHelper<Common.Nodes> = (payload, state) => {
+	const { currentNode, nodesOffset } = state;
+	const { xArray, yArray } = nodesOffset;
+	if (!currentNode) {
+		return;
+	}
+	const { yIndex, xIndex } = currentNode;
+
+	const { style: currStyle, data } = payload;
+	const { code } = data;
+	const { x, y } = currStyle;
+	const newXIndex = binarySearch(
+		{
+			offset: x,
+			code,
+		},
+		xArray,
+		Math.floor(xArray.length / 2)
+	);
+	const newYIndex = binarySearch(
+		{
+			offset: y,
+			code,
+		},
+		yArray,
+		Math.floor(xArray.length / 2)
+	);
+	if (newXIndex >= xArray.length) {
+		xArray.push({
+			code: code,
+			offset: x,
+		});
+		yArray.push({
+			code: code,
+			offset: y,
+		});
+	} else {
+		const tempXOffset = xArray[xIndex];
+		const tempYOffset = yArray[yIndex];
+		xArray[xIndex] = { code: code, offset: x };
+		yArray[yIndex] = { code: code, offset: y };
+		xArray[newXIndex] = tempXOffset;
+		yArray[newYIndex] = tempYOffset;
+	}
+	state.currentNode = { ...payload, yIndex: newYIndex, xIndex: newXIndex };
+};
