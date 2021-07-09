@@ -1,12 +1,9 @@
-import React from "react";
 import "./App.css";
 import CanvasContext from "components/CanvasContext";
+import Main from "components";
 
 const App = () => {
-	return (
-	<CanvasContext>
-		
-	</CanvasContext>)
+	return <CanvasContext>{(state: any, dispatch: any) => <Main state={state} dispatch={dispatch} />}</CanvasContext>;
 };
 
 export default App;

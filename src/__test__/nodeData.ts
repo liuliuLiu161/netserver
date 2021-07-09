@@ -1,7 +1,7 @@
-import { Component } from "react";
+// import { Component } from "react";
 import { Colors } from "util/constant";
 
-export const sampleData: { [key: string]: Common.Node } = {
+export const sampleData: { [key: string]: Common.Nodes } = {
 	test: {
 		style: {
 			height: 20,

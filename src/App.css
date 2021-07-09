@@ -1,11 +1,30 @@
 .App {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  height: 100vh;
+  width: 100vw;
 }
 .menuList{
   display: flex;
   flex: 1;
   justify-content: center;
   color: #fff;
+  border: #222 solid;
 }
-
+.menuList > div{
+  background-color: #222;
+  display: flex;
+  align-items: center;
+  height:34px;
+  padding: 0px 10px;
+}
+.canvasContainer {
+  position: relative;
+}
+.drag{
+  position: absolute;
+  border: #222 dashed 1px;
+  top: 0;
+  left: 0;
+}
