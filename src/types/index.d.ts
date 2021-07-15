@@ -109,7 +109,7 @@ declare namespace Components {
 			offsetY: number;
 		};
 		nodes: {
-			[code: string]: Nodes;
+			[code: string]: Common.Nodes;
 		};
 		//Fast find match node
 		nodesOffset: {
