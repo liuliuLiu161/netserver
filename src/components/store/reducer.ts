@@ -21,10 +21,10 @@ const reduce = (draft: Components.ContextState, action: ReturnType<Components.Co
 			case "UPDATE_NODE": {
 				// const code = state.currentNode?.data.code;
 				updateNodes(payload, state);
+				updateCurrentNode(payload, state);
 				break;
 			}
 			case "UPDATE_CURRENT_NODE": {
-				updateCurrentNode(payload, state);
 				break;
 			}
 			case "UPDATE_CANVAS_ATTR": {

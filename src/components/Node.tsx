@@ -1,21 +1,30 @@
 import React, { useLayoutEffect } from "react";
 
-export const Node: React.FC<Common.NodeProps<Common.NodeContextState>> = (props) => {
+export const drawNode = (props: Common.NodeProps<Common.NodeContextState>) => {
 	const { code, node, canvas } = props;
 	const { style, data } = node;
 	const { x, y, height, width } = style;
-	// const state = l
-	// console.log(props);
-	useLayoutEffect(() => {
-		const ctx = canvas;
-		if (!ctx) {
-			return;
-		}
-		ctx.fillStyle = "#f00";
-		ctx.fillRect(x, y, width, height);
-	});
-	return <></>;
+	const ctx = canvas;
+	if (!ctx) {
+		return;
+	}
+	ctx.fillStyle = "#f00";
+	ctx.fillRect(x, y, width, height);
 };
+
+export const renderNodes = (ctx: CanvasRenderingContext2D, nodes: { [key: string]: Common.Nodes }) => {
+	const codes = Object.keys(nodes);
+	for (let index = 0; index < codes.length; index++) {
+		const code = codes[index];
+		const item = nodes[code];
+		drawNode({
+			code,
+			canvas: ctx,
+			node: item,
+		});
+	}
+};
+
 /**
  * Cx=Ax+(Bx-Ax)cosN+(By-Ay)sinN
  * Cy=Ay+(Bx-Ax)(-sinN)+(By-Ay)cosN

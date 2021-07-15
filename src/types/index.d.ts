@@ -1,22 +1,33 @@
 declare namespace Common {
 	interface NodeData {
+		//Node union code
 		code: string;
+
+		//Previous nodes
 		previous: {
 			code: string;
+			//Previous nodes points
 			pointCode: string;
 			style: React.CSSProperties;
 		}[];
+
+		//Next nodes points
 		next: {
 			code: string;
 			pointCode: string;
 			style: React.CSSProperties;
 		}[];
+
+		//Connection points
 		point?: {
 			code: string;
 			position: number[];
 			path: string;
 			style: React.CSSProperties;
 		}[];
+
+		//Node cache Data
+		extends?: any;
 	}
 
 	interface NodeStyle {
@@ -36,7 +47,7 @@ declare namespace Common {
 
 	//Effective fucntion of reducer cases
 	interface ReducerHelper<T> {
-		(payload: T, state: Components.ContextState): void;
+		(payload: T, state: Components.ContextState): Components.ContextState;
 	}
 
 	enum Colors {
@@ -74,8 +85,8 @@ declare namespace Components {
 	}
 
 	interface CurrentNode extends Common.Nodes {
-		xIndex: number;
-		yIndex: number;
+		xIndex?: number;
+		yIndex?: number;
 	}
 
 	interface NodesOffsetSortedItem {
@@ -104,6 +115,8 @@ declare namespace Components {
 		nodesOffset: {
 			xArray: NodesOffsetSortedItem[];
 			yArray: NodesOffsetSortedItem[];
+			x2Array: NodesOffsetSortedItem[];
+			y2Array: NodesOffsetSortedItem[];
 		};
 		dragger: {
 			node: Common.Nodes | null;

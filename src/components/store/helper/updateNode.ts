@@ -1,67 +1,67 @@
-import { binarySearch } from "./common";
-
 export const updateNodes: Common.ReducerHelper<{ x: number; y: number }> = (payload, state) => {
 	const { currentNode } = state;
 	const { x, y } = payload;
-
 	if (!currentNode) {
-		return;
-		// console.log(JSON.stringify(state.nodesOffset.xArray));
+		return state;
 	}
-	const code = currentNode.data.code;
-
-	state.nodes[code].style = {
+	const { data } = currentNode;
+	const { code } = data;
+	const newStyle = {
 		...state.nodes[code].style,
 		x,
 		y,
 	};
+	state.nodes[code].style = newStyle;
+	return state;
+};
 
-	// const
+const updateOffsetArray = (
+	offsetArray: Components.NodesOffsetSortedItem[],
+	newNode: {
+		data: Common.NodeData;
+		offset: number;
+	}
+) => {
+	const { offset, data } = newNode;
+	const { code } = data;
+	// debugger;
+	const newNodeIndex = offsetArray.findIndex((item) => item.code === code);
+	if (newNodeIndex !== -1) {
+		offsetArray[newNodeIndex].offset = offset;
+	}
+	return offsetArray;
 };
 
 export const updateCurrentNode: Common.ReducerHelper<Common.Nodes> = (payload, state) => {
 	const { currentNode, nodesOffset } = state;
-	const { xArray, yArray } = nodesOffset;
+	const { xArray, yArray, x2Array, y2Array } = nodesOffset;
 	if (!currentNode) {
-		return;
+		return state;
 	}
-	const { yIndex, xIndex } = currentNode;
+	const { data } = currentNode;
 
-	const { style: currStyle, data } = payload;
-	const { code } = data;
-	const { x, y } = currStyle;
-	const newXIndex = binarySearch(
-		{
+	const { style: currStyle } = payload;
+	const { x, y, height, width } = currStyle;
+
+	state.currentNode = { ...payload };
+
+	state.nodesOffset = {
+		xArray: updateOffsetArray(xArray, {
+			data,
 			offset: x,
-			code,
-		},
-		xArray,
-		Math.floor(xArray.length / 2)
-	);
-	const newYIndex = binarySearch(
-		{
+		}).sort((curr, next) => curr.offset - next.offset),
+		yArray: updateOffsetArray(yArray, {
+			data,
 			offset: y,
-			code,
-		},
-		yArray,
-		Math.floor(xArray.length / 2)
-	);
-	if (newXIndex >= xArray.length) {
-		xArray.push({
-			code: code,
-			offset: x,
-		});
-		yArray.push({
-			code: code,
-			offset: y,
-		});
-	} else {
-		const tempXOffset = xArray[xIndex];
-		const tempYOffset = yArray[yIndex];
-		xArray[xIndex] = { code: code, offset: x };
-		yArray[yIndex] = { code: code, offset: y };
-		xArray[newXIndex] = tempXOffset;
-		yArray[newYIndex] = tempYOffset;
-	}
-	state.currentNode = { ...payload, yIndex: newYIndex, xIndex: newXIndex };
+		}).sort((curr, next) => curr.offset - next.offset),
+		y2Array: updateOffsetArray(y2Array, {
+			data,
+			offset: y + height,
+		}).sort((curr, next) => curr.offset - next.offset),
+		x2Array: updateOffsetArray(x2Array, {
+			data,
+			offset: x + width,
+		}).sort((curr, next) => curr.offset - next.offset),
+	};
+	return state;
 };

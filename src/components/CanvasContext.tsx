@@ -18,6 +18,8 @@ const initialState: Components.ContextState = {
 	nodesOffset: {
 		xArray: [],
 		yArray: [],
+		x2Array: [],
+		y2Array: [],
 	},
 };
 

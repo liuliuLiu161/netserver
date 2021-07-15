@@ -1,58 +1,55 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Dragger from "./Dragger";
 import DraggerContainer from "./DraggerContainer";
-import { Node } from "./Node";
+// import { renderNodes } from "./Node";
+import Nodes from "./store";
 
-const Main: React.FC<{
-	dispatch: Components.ContextAction;
-	state: Components.ContextState;
-}> = (props) => {
+const Main: React.FC = (props) => {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
-	const { dispatch, state } = props;
+	// const nodesIns = new Nodes();
+	const [nodesIns, setNodesIns] = useState(new Nodes());
+	const { nodes, currentNode, canvas: ctx } = nodesIns.getNodes();
+	// const { canvas: ctx, nodes, currentNode } = state;
+	// console.log(nodesOffset.xArray.map((item) => item.offset));
+	console.log("trigger");
 
-	const { canvas, nodes, currentNode } = state;
-	const addNode = () => {
-		dispatch({
-			type: "ADD_NODE",
-			payload: {
-				style: {
-					x: 20 * Math.random(),
-					y: 20 * Math.random(),
-					width: 100,
-					height: 60,
-					zIndex: Object.keys(nodes).length,
-				},
-			},
-		});
+	const handleAddNode = () => {
+		setNodesIns(
+			nodesIns
+				.addNode({
+					style: {
+						x: 20 * Math.random(),
+						y: 20 * Math.random(),
+						width: 100,
+						height: 60,
+						zIndex: Object.keys(nodes).length,
+					},
+				})
+				.renderNodes()
+		);
 	};
 
-	const renderNodes = (canvas: any, nodes: { [key: string]: Common.Nodes }) => {
-		const codes = Object.keys(nodes);
-		return codes.map((code) => {
-			const item = nodes[code];
-			return <Node key={code} canvas={canvas} node={item} code={code} />;
-		});
-	};
+	// useEffect(() => {
+	// 	ctx && renderNodes(ctx, nodes);
+	// }, [ctx, nodes]);
 
 	// const
+	console.log("index rigger", currentNode);
 
 	useEffect(() => {
 		if (canvasRef.current) {
-			dispatch({
-				type: "INIT_BASIC_CANVAS",
-				payload: canvasRef.current.getContext("2d"),
-			});
+			const ctx = canvasRef.current.getContext("2d");
+			setNodesIns(nodesIns.initialCanvas(ctx));
 		}
 	}, []);
 
 	return (
 		<div className="App">
 			<div className="menuList">
-				<div onClick={addNode}>ADD</div>
+				<div onClick={handleAddNode}>ADD</div>
 			</div>
-			<DraggerContainer dispatch={dispatch} currentNode={nodes[currentNode?.data.code || ""] || null} canvasRef={canvasRef}>
-				<canvas width={document.body.clientWidth} height={0.9 * document.body.clientHeight} ref={canvasRef} />
-				{canvas ? renderNodes(canvas, nodes) : null}
+			<DraggerContainer nodes={nodes} nodeIns={nodesIns} currentNode={currentNode} canvasRef={canvasRef} ctx={ctx}>
+				<canvas width={document.body.clientWidth} height={800} ref={canvasRef} />
 				<Dragger node={currentNode} />
 			</DraggerContainer>
 		</div>
