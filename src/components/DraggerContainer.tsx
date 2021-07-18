@@ -1,7 +1,5 @@
 import { useState } from "react";
-import { Action, useDispatch } from "./store";
-// import Nodes from "./store";
-import { binarySearch } from "./store/helper/common";
+import { Action } from "./store";
 const DraggerContainer: React.FC<{
 	canvasRef: React.RefObject<HTMLCanvasElement>;
 	dispatch: Action;
@@ -10,7 +8,7 @@ const DraggerContainer: React.FC<{
 	ctx: CanvasRenderingContext2D | null;
 	nodes: any;
 }> = (props) => {
-	const { canvasRef, children, nodeIns, currentNode, dispatch, ctx } = props;
+	const { canvasRef, children, currentNode, dispatch, ctx } = props;
 
 	const [isMoving, setMove] = useState(false);
 
@@ -19,15 +17,7 @@ const DraggerContainer: React.FC<{
 		y: 0,
 	});
 
-	// const [tempNodes, setTempNodes] = useState(nodes);
-
-	// const [tempNodeIns, setTempNodesIns] = useState(nodeIns);
-	// console.log(tempNodeIns, nodeIns);
-
-	// const [state, setState] = useDispatch(nodeIns);
-
-	const handleMouseDown = (e: React.MouseEvent) => {
-		// const { pageX, pageY } = e;
+	const handleMouseDown = () => {
 		const canvas = canvasRef.current;
 		if (!canvas) {
 			return;
@@ -39,10 +29,6 @@ const DraggerContainer: React.FC<{
 
 		const { left, top } = rect;
 
-		// dispatch("selectNode", {
-		// 	x: pageX - left,
-		// 	y: pageY - top,
-		// });
 		setCanvasOffset({
 			x: left,
 			y: top,
@@ -51,23 +37,15 @@ const DraggerContainer: React.FC<{
 	};
 
 	const handleClick = (e: React.MouseEvent) => {
-		const { nodesOffset } = nodeIns;
-		// if(!currentNode) return;
-		const { xArray, yArray } = nodesOffset;
 		const { x, y } = canvasOffset;
 		const { pageX, pageY } = e;
-		// const xItem = binarySearch({ code: "", offset: pageX }, xArray);
-		// const yItem = binarySearch({ code: "", offset: pageY }, yArray);
 
-		dispatch("selectNode", {
-			x: pageX - x,
-			y: pageY - y,
-		});
-		// console.log(
-		// 	xItem,
-		// 	xArray.map((item) => item.offset),
-		// 	xArray[xItem]
-		// );
+		setMove(false);
+
+		// dispatch("selectNode", {
+		// 	x: pageX - x,
+		// 	y: pageY - y,
+		// });
 	};
 
 	const handleMove = (e: React.MouseEvent) => {
@@ -81,22 +59,9 @@ const DraggerContainer: React.FC<{
 
 		if (!ctx) return;
 		if (!currentNode) return;
-		const { data, style } = currentNode;
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 		dispatch("updateNodes", { x: pageX - x, y: pageY - y });
-
-		// tempNodeIns
-		// 	.updateNodes({ x: pageX - x, y: pageY - y })
-		// 	.updateCurrentNodes({
-		// 		data,
-		// 		style: {
-		// 			...style,
-		// 			x: pageX,
-		// 			y: pageY,
-		// 		},
-		// 	})
-		// 	.renderNodes();
 	};
 
 	const handleMouseUp = (e: React.MouseEvent) => {
@@ -104,6 +69,10 @@ const DraggerContainer: React.FC<{
 		const { pageX, pageY } = e;
 		const { x, y } = canvasOffset;
 		const { data, style } = currentNode;
+		// dispatch("selectNode", {
+		// 	x: pageX - x,
+		// 	y: pageY - y,
+		// });
 		dispatch("updateCurrentNode", {
 			data,
 			style: {

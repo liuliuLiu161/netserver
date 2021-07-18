@@ -114,9 +114,9 @@ declare namespace Components {
 		//Fast find match node
 		nodesOffset: {
 			xArray: NodesOffsetSortedItem[];
-			yArray: NodesOffsetSortedItem[];
-			x2Array: NodesOffsetSortedItem[];
-			y2Array: NodesOffsetSortedItem[];
+			// yArray: NodesOffsetSortedItem[];
+			// x2Array: NodesOffsetSortedItem[];
+			// y2Array: NodesOffsetSortedItem[];
 		};
 		dragger: {
 			node: Common.Nodes | null;
@@ -126,9 +126,7 @@ declare namespace Components {
 	type ConnectComponent = <P = {}>(C: React.FC<P>) => React.FC<P>;
 
 	type Connect = <P = {}>(
-		dependence: (
-			state: ContextState
-		) => {
+		dependence: (state: ContextState) => {
 			[key: string]: any;
 		}
 	) => ConnectComponent<P>;

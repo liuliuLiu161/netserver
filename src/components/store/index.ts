@@ -94,9 +94,9 @@ export const initialState: Components.ContextState = {
 	nodes: {},
 	nodesOffset: {
 		xArray: [],
-		yArray: [],
-		x2Array: [],
-		y2Array: [],
+		// yArray: [],
+		// x2Array: [],
+		// y2Array: [],
 	},
 };
 

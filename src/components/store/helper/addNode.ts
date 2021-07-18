@@ -12,19 +12,22 @@ const addNode: Common.ReducerHelper<{ style: Common.NodeStyle }> = (payload, sta
 			next: [],
 		},
 	};
-	const { x, y, height, width } = style;
+	const {
+		x,
+		// , y, height, width
+	} = style;
 	const nodesCount = Object.keys(state.nodes).length;
 	const newXArray = insertOffsetArray({ code, offset: x }, state.nodesOffset.xArray);
-	const newYArray = insertOffsetArray({ code, offset: y }, state.nodesOffset.yArray);
-	const newY2Array = insertOffsetArray({ code, offset: y + height }, state.nodesOffset.yArray);
-	const newX2Array = insertOffsetArray({ code, offset: x + width }, state.nodesOffset.yArray);
+	// const newYArray = insertOffsetArray({ code, offset: y }, state.nodesOffset.yArray);
+	// const newY2Array = insertOffsetArray({ code, offset: y + height }, state.nodesOffset.yArray);
+	// const newX2Array = insertOffsetArray({ code, offset: x + width }, state.nodesOffset.yArray);
 	state.nodes[code] = node;
 
 	state.nodesOffset = {
 		xArray: newXArray,
-		yArray: newYArray,
-		x2Array: newX2Array,
-		y2Array: newY2Array,
+		// yArray: newYArray,
+		// x2Array: newX2Array,
+		// y2Array: newY2Array,
 	};
 	state.currentNode = { ...node, xIndex: nodesCount, yIndex: nodesCount };
 	return state;
