@@ -1,82 +1,15 @@
 import produce from "immer";
-import { renderNodes } from "components/Node";
+import { renderNodes } from "components/drawer";
 import addNode from "./helper/addNode";
-import { updateCurrentNode, updateNodes } from "./helper/updateNode";
+import {
+	// updateCurrentNode,
+	updateNodes,
+} from "./helper/updateNode";
 import { useState } from "react";
 import selectNode from "./helper/selectNode";
-
-// export default class Nodes implements Components.ContextState {
-// 	// private nodes!: Components.ContextState;
-// 	canvas: Components.ContextState["canvas"] = null;
-// 	attr = {
-// 		clickX: NaN,
-// 		clickY: NaN,
-// 		offsetX: NaN,
-// 		offsetY: NaN,
-// 	};
-// 	dragger: Components.ContextState["dragger"] = {
-// 		node: null,
-// 	};
-// 	currentNode: Components.ContextState["currentNode"] = null;
-// 	overlay = {};
-// 	nodes: Components.ContextState["nodes"] = {};
-// 	nodesOffset: Components.ContextState["nodesOffset"] = {
-// 		xArray: [],
-// 		yArray: [],
-// 		x2Array: [],
-// 		y2Array: [],
-// 	};
-// 	constructor(nodes?: Components.ContextState) {
-// 		if (!nodes) return this;
-// 		const { canvas, attr, dragger, currentNode, overlay, nodes: nodesData, nodesOffset } = nodes;
-// 		this.attr = attr;
-// 		this.canvas = canvas;
-// 		this.dragger = dragger;
-// 		this.nodes = nodes;
-// 		this.nodesOffset = nodesOffset;
-// 		this.overlay = overlay;
-// 		this.currentNode = currentNode;
-// 		this.nodes = nodesData;
-// 		return this;
-// 	}
-
-// 	getNodes = () => {
-// 		return {
-// 			canvas: this.canvas,
-// 			attr: this.attr,
-// 			dragger: this.dragger,
-// 			currentNode: this.currentNode,
-// 			overlay: this.overlay,
-// 			nodes: this.nodes,
-// 			nodesOffset: this.nodesOffset,
-// 		};
-// 	};
-
-// 	addNode = (payload: { style: Common.NodeStyle }) => new Nodes(addNode(payload, this));
-// 	// addNode = (payload: { style: Common.NodeStyle }) => addNode(payload, this);
-
-// 	updateNodes = (payload: { x: number; y: number }) => new Nodes(updateNodes(payload, this));
-// 	// updateNodes = (payload: { x: number; y: number }) => updateNodes(payload, this);
-
-// 	updateCurrentNodes = (payload: Common.Nodes) => new Nodes(updateCurrentNode(payload, this));
-// 	// updateCurrentNodes = (payload: Common.Nodes) => updateCurrentNode(payload, this);
-
-// 	renderNodes = () => {
-// 		if (!this.canvas) {
-// 			console.warn("The canvas context is null . Nodes won't update");
-// 			return this;
-// 		}
-// 		renderNodes(this.canvas, this.nodes);
-// 		return new Nodes(this);
-// 		// return this;
-// 	};
-
-// 	initialCanvas = (context: Components.ContextState["canvas"]) => {
-// 		this.canvas = context;
-// 		return new Nodes(this);
-// 		// return this;
-// 	};
-// }
+import { sampleData } from "__test__/nodeData";
+import updateNodePrevious from "./helper/updateNodePrevious";
+import createOutputPoint from "./helper/createPoint";
 
 export const initialState: Components.ContextState = {
 	canvas: null,
@@ -91,12 +24,9 @@ export const initialState: Components.ContextState = {
 	},
 	currentNode: null,
 	overlay: {},
-	nodes: {},
+	nodes: sampleData,
 	nodesOffset: {
 		xArray: [],
-		// yArray: [],
-		// x2Array: [],
-		// y2Array: [],
 	},
 };
 
@@ -108,10 +38,15 @@ interface Actions {
 		x: number;
 		y: number;
 	}>;
-	updateCurrentNode: Common.ReducerHelper<Common.Nodes>;
 	renderNode(state: Components.ContextState): void;
 	initialCanvas: Common.ReducerHelper<Components.ContextState["canvas"]>;
 	selectNode: Common.ReducerHelper<{ x: number; y: number }>;
+	updateNodePrevious: Common.ReducerHelper<{
+		nodeCode: string;
+		pointCode: string;
+		currentPointCode: string;
+	}>;
+	createOutputPoint: Common.ReducerHelper<{ source: Common.ResultType; type: "input" | "output" }>;
 }
 
 export type Action = (type: keyof Actions, payload?: any) => void;
@@ -129,20 +64,20 @@ const initialCanvas: Common.ReducerHelper<Components.ContextState["canvas"]> = (
 
 export const useDispatch = (state: Components.ContextState): [state: Components.ContextState, action: Action] => {
 	const [initialState, setState] = useState(state);
-	// state = Object.isFrozen(state) ? state : Object.freeze(state);
 
 	const actions: Actions = {
 		addNode,
 		updateNodes,
-		updateCurrentNode,
 		renderNode,
 		initialCanvas,
 		selectNode,
+		updateNodePrevious,
+		createOutputPoint,
 	};
 
 	const handle = (type: keyof Actions, payload?: any) => {
 		const state = produce(initialState, (draf: any) => {
-			const state = draf;
+			const state: Components.ContextState = draf;
 			switch (type) {
 				case "addNode":
 					draf = actions.addNode(payload, state);
@@ -151,12 +86,9 @@ export const useDispatch = (state: Components.ContextState): [state: Components.
 				case "renderNode":
 					actions.renderNode(state);
 					break;
-				case "updateCurrentNode":
-					draf = actions.updateCurrentNode(payload, state);
-					actions.renderNode(draf);
-					break;
 				case "updateNodes":
 					draf = actions.updateNodes(payload, state);
+					// console.log(JSON.stringify(draf, null, 2));
 					actions.renderNode(draf);
 					break;
 				case "initialCanvas":
@@ -164,6 +96,14 @@ export const useDispatch = (state: Components.ContextState): [state: Components.
 					break;
 				case "selectNode":
 					draf = actions.selectNode(payload, state);
+					break;
+				case "updateNodePrevious":
+					draf = actions.updateNodePrevious(payload, state);
+					actions.renderNode(draf);
+					break;
+				case "createOutputPoint":
+					draf = createOutputPoint(payload, state);
+					actions.renderNode(draf);
 					break;
 				default:
 					break;

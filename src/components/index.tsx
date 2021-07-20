@@ -1,20 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
+import Config from "./Config";
 import Dragger from "./Dragger";
 import DraggerContainer from "./DraggerContainer";
-// import { renderNodes } from "./Node";
+import { renderNodes } from "./drawer";
 import { initialState, useDispatch } from "./store";
 
-const Main: React.FC = (props) => {
+const Main: React.FC = () => {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
-	// const nodesIns = new Nodes();
-	// const [nodesIns, setNodesIns] = useState(initialState);
+
 	const [nodesIns, action] = useDispatch(initialState);
 	const { nodes, currentNode, canvas: ctx } = nodesIns;
-	// const { canvas: ctx, nodes, currentNode } = state;
-	// console.log(nodesOffset.xArray.map((item) => item.offset));
 
 	const handleAddNode = () => {
-		const newNodesIns = action("addNode", {
+		action("addNode", {
 			style: {
 				x: 20 * Math.random(),
 				y: 20 * Math.random(),
@@ -23,43 +21,30 @@ const Main: React.FC = (props) => {
 				zIndex: Object.keys(nodes).length,
 			},
 		});
-
-		// addNode({
-		// 	style: {
-		// 		x: 20 * Math.random(),
-		// 		y: 20 * Math.random(),
-		// 		width: 100,
-		// 		height: 60,
-		// 		zIndex: Object.keys(nodes).length,
-		// 	},
-		// })
-		// .renderNodes()
 	};
-
-	// useEffect(() => {
-	// 	ctx && renderNodes(ctx, nodes);
-	// }, [ctx, nodes]);
-
-	// const
-	// console.log("index rigger", currentNode);
 
 	useEffect(() => {
 		if (canvasRef.current) {
 			const ctx = canvasRef.current.getContext("2d");
-			// setNodesIns(nodesIns.initialCanvas(ctx));
 			action("initialCanvas", ctx);
+			ctx && renderNodes(ctx, nodes);
 		}
-	}, []);
+	}, []); //eslint-disable-line
 
 	return (
 		<div className="App">
 			<div className="menuList">
 				<div onClick={handleAddNode}>ADD</div>
 			</div>
-			<DraggerContainer nodes={nodes} dispatch={action} nodeIns={nodesIns} currentNode={currentNode} canvasRef={canvasRef} ctx={ctx}>
-				<canvas width={document.body.clientWidth} height={800} ref={canvasRef} />
-				<Dragger node={currentNode} />
-			</DraggerContainer>
+			<div className="mainContainer">
+				<div className="config">
+					<Config {...nodesIns} />
+				</div>
+				<DraggerContainer dispatch={action} nodeIns={nodesIns} canvasRef={canvasRef} ctx={ctx}>
+					<canvas width={document.body.clientWidth * 0.75} height={800} ref={canvasRef} />
+					<Dragger node={currentNode} />
+				</DraggerContainer>
+			</div>
 		</div>
 	);
 };

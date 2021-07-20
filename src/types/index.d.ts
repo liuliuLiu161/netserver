@@ -1,33 +1,13 @@
 declare namespace Common {
+	interface ResultType {
+		[key: string]: string | number | string[] | number[];
+	}
+
 	interface NodeData {
-		//Node union code
-		code: string;
-
 		//Previous nodes
-		previous: {
-			code: string;
-			//Previous nodes points
-			pointCode: string;
-			style: React.CSSProperties;
-		}[];
-
-		//Next nodes points
-		next: {
-			code: string;
-			pointCode: string;
-			style: React.CSSProperties;
-		}[];
-
-		//Connection points
-		point?: {
-			code: string;
-			position: number[];
-			path: string;
-			style: React.CSSProperties;
-		}[];
 
 		//Node cache Data
-		extends?: any;
+		cache?: any;
 	}
 
 	interface NodeStyle {
@@ -43,8 +23,37 @@ declare namespace Common {
 	interface Nodes {
 		style: NodeStyle;
 		data: NodeData;
+		previous?: Previous[];
+
+		//Next nodes points
+		next: {
+			[code: string]: { pointCode: string; style: LineStyle };
+		};
+
+		//Connection points
+		point?: Points;
 	}
 
+	interface NodesMap {
+		[code: string]: Nodes;
+	}
+
+	interface Point {
+		path: string;
+		style: PointStyle;
+		type: "input" | "output";
+	}
+	interface Points {
+		[code: string]: Point;
+	}
+
+	interface Previous {
+		code: string;
+		//Previous nodes points
+		pointCode: string;
+		currentPointCode: string;
+		style: LineStyle;
+	}
 	//Effective fucntion of reducer cases
 	interface ReducerHelper<T> {
 		(payload: T, state: Components.ContextState): Components.ContextState;
@@ -68,12 +77,29 @@ declare namespace Common {
 		data: NodeData;
 	}
 
-	interface LineProps {
+	interface LineStyle {
+		color: string;
+		radin?: number;
+	}
+
+	interface LineProps extends LineStyle {
 		start: number[];
 		end: number[];
-		color: string;
 		canvas: Components.CanvasContext["canvas"];
-		radin?: number;
+	}
+
+	interface PointStyle {
+		// circle center x
+		x: number;
+		// circle center y
+		y: number;
+		// default 15
+		r?: number;
+		color: string;
+	}
+
+	interface PointProps extends PointStyle {
+		canvas: Components.CanvasContext["canvas"];
 	}
 
 	type PathData = NodeData[];
@@ -85,6 +111,7 @@ declare namespace Components {
 	}
 
 	interface CurrentNode extends Common.Nodes {
+		code: string;
 		xIndex?: number;
 		yIndex?: number;
 	}
@@ -108,15 +135,10 @@ declare namespace Components {
 			offsetX: number;
 			offsetY: number;
 		};
-		nodes: {
-			[code: string]: Common.Nodes;
-		};
+		nodes: Common.NodesMap;
 		//Fast find match node
-		nodesOffset: {
+		nodesOffset?: {
 			xArray: NodesOffsetSortedItem[];
-			// yArray: NodesOffsetSortedItem[];
-			// x2Array: NodesOffsetSortedItem[];
-			// y2Array: NodesOffsetSortedItem[];
 		};
 		dragger: {
 			node: Common.Nodes | null;
@@ -126,7 +148,9 @@ declare namespace Components {
 	type ConnectComponent = <P = {}>(C: React.FC<P>) => React.FC<P>;
 
 	type Connect = <P = {}>(
-		dependence: (state: ContextState) => {
+		dependence: (
+			state: ContextState
+		) => {
 			[key: string]: any;
 		}
 	) => ConnectComponent<P>;

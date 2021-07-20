@@ -19,7 +19,16 @@
   height:34px;
   padding: 0px 10px;
 }
+.mainContainer{
+  display: flex;
+}
+.config{
+  flex:1;
+  box-sizing: border-box;
+  border: #222 1px dashed;
+}
 .canvasContainer {
+  flex:3;
   position: relative;
 }
 .drag{

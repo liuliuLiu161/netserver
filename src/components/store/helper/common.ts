@@ -63,10 +63,9 @@ export const insertOffsetArray = (item: Components.NodesOffsetSortedItem, array:
 	return array;
 };
 
-// export const resortOffsetArray = (item: Components.NodesOffsetSortedItem, array: Components.NodesOffsetSortedItem[]) => {
-// 	const itemIndex = binarySearch(item, array, Math.floor(array.length / 2));
-//   const insertItem = array[itemIndex];
-//   const oldIndex = binarySearch
-//   array[itemIndex] = item;
+export const isIncludeBox = (box: Common.NodeStyle, position: { x: number; y: number }) => {
+	const { x, y } = position;
+	const { x: left, y: top, width, height } = box;
 
-// };
+	return x >= left && x < left + width && top <= y && top + height >= y;
+};

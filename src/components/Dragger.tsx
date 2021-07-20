@@ -1,9 +1,6 @@
 import React from "react";
 
 const Dragger: React.FC<Components.ContextState["dragger"]> = (props) => {
-	const handleMove = (e: React.MouseEvent) => {
-		const {} = e;
-	};
 	const { node } = props;
 
 	const dragStyle = (): React.CSSProperties => {
