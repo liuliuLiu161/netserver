@@ -35,10 +35,11 @@ const Main: React.FC = () => {
 		<div className="App">
 			<div className="menuList">
 				<div onClick={handleAddNode}>ADD</div>
+				<div onClick={() => action("deleteNode", currentNode?.code)}>DEL</div>
 			</div>
 			<div className="mainContainer">
 				<div className="config">
-					<Config {...nodesIns} />
+					<Config {...nodesIns} dispatch={action} />
 				</div>
 				<DraggerContainer dispatch={action} nodeIns={nodesIns} canvasRef={canvasRef} ctx={ctx}>
 					<canvas width={document.body.clientWidth * 0.75} height={800} ref={canvasRef} />

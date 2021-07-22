@@ -77,16 +77,15 @@ const DraggerContainer: React.FC<{
 			return Math.abs(x - realX) < radin && Math.abs(y - realY) < radin;
 		});
 		if (!hasPointCode) {
+			// pointCache = null;
 			return;
 		}
-		// updatePointsCache(nodeIns.nodes);
-		// pointCache = points[hasPointCode].style;
+
 		if (!canDrawLine) {
 			setCanDrawLine(true);
 			previousNode = currentNode;
 			pointCache = { code: hasPointCode, ...points[hasPointCode].style };
 		} else {
-			console.log("triggeer", currentNode.code);
 			dispatch("updateNodePrevious", {
 				nodeCode: previousNode?.code,
 				currentPointCode: hasPointCode,

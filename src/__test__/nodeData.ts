@@ -13,7 +13,7 @@ export const sampleData: { [key: string]: Common.Nodes } = {
 		},
 		data: {},
 		previous: [],
-		next: {},
+		next: [],
 		point: {
 			"test-point": {
 				path: "a.b.c",
@@ -46,7 +46,7 @@ export const sampleData: { [key: string]: Common.Nodes } = {
 				},
 			},
 		],
-		next: {},
+		next: [],
 		point: {
 			"test-point": {
 				path: "a.b.c",
@@ -70,7 +70,7 @@ export const sampleData: { [key: string]: Common.Nodes } = {
 		},
 		data: {},
 		previous: [],
-		next: {},
+		next: [],
 		point: {
 			"test-point": {
 				path: "a.b.c",

@@ -85,7 +85,9 @@ export const renderLines = (ctx: CanvasRenderingContext2D, lines: Common.Previou
 		// const {} = line;
 		const { pointCode, currentPointCode, code, style } = line;
 		const startNode = nodes[code];
-
+		if (!pointCode) {
+			continue;
+		}
 		if (!startNode) {
 			continue;
 		}

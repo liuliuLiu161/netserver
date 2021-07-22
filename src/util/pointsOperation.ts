@@ -2,21 +2,20 @@ export const calcPointCoord = (points: Common.Points, nodeStyle: Common.NodeStyl
 	const pointCodes = Object.keys(points);
 	const pointCount = pointCodes.length;
 	const { x, y, width, height } = nodeStyle;
-	const result = {
-		x,
-		y,
-	};
+	const result: { [code: string]: { x: number; y: number } } = {};
+	const pointGap = Math.floor(height / pointCount);
 	for (let i = 0; i < pointCount; i++) {
 		const code = pointCodes[i];
 		const { type } = points[code];
 		const radin = 7; // TODO: Point radin is editorable
-		const pointGap = Math.floor(height / pointCount);
+		result[code] = { x: 0, y: 0 };
 		if (type === "input") {
-			result.x -= radin;
+			result[code].x = x + radin;
 		} else {
-			result.x += radin + width;
+			result[code].x = x + width - radin;
 		}
-		result.y += (i + 1) * (pointGap - radin);
+		result[code].y = y + (i + 1) * (pointGap - radin);
+		// console.log(result.y);
 	}
 	return result;
 };

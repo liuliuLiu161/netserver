@@ -7,10 +7,11 @@ import {
 } from "./helper/updateNode";
 import { useState } from "react";
 import selectNode from "./helper/selectNode";
-import { sampleData } from "__test__/nodeData";
+// import { sampleData } from "__test__/nodeData";
 import updateNodePrevious from "./helper/updateNodePrevious";
-import createOutputPoint from "./helper/createPoint";
-
+import { createOutputPoint, createInputPoint } from "./helper/createPoint";
+import deleteNode from "./helper/deleteNode";
+import updatePoint from "./helper/updatePoint";
 export const initialState: Components.ContextState = {
 	canvas: null,
 	attr: {
@@ -24,7 +25,8 @@ export const initialState: Components.ContextState = {
 	},
 	currentNode: null,
 	overlay: {},
-	nodes: sampleData,
+	// nodes: sampleData,
+	nodes: {},
 	nodesOffset: {
 		xArray: [],
 	},
@@ -46,7 +48,13 @@ interface Actions {
 		pointCode: string;
 		currentPointCode: string;
 	}>;
-	createOutputPoint: Common.ReducerHelper<{ source: Common.ResultType; type: "input" | "output" }>;
+	createOutputPoint: Common.ReducerHelper<{ source: Common.ResultType; type: "input" | "output"; sourceData: any }>;
+	createInputPoint: Common.ReducerHelper<{ path: string; type: "input" | "output" }>;
+	deleteNode: Common.ReducerHelper<string>;
+	updatePoint: Common.ReducerHelper<{
+		pointCode: string;
+		point: Partial<Common.Point>;
+	}>;
 }
 
 export type Action = (type: keyof Actions, payload?: any) => void;
@@ -65,6 +73,11 @@ const initialCanvas: Common.ReducerHelper<Components.ContextState["canvas"]> = (
 export const useDispatch = (state: Components.ContextState): [state: Components.ContextState, action: Action] => {
 	const [initialState, setState] = useState(state);
 
+	// const needRenderNodes = (type: string) => {
+	// 	const types = ["addNode", "updateNodes", "updateNodePrevious", "createOutputPoint", "createInputPoint"];
+	// 	return types.includes(type);
+	// };
+
 	const actions: Actions = {
 		addNode,
 		updateNodes,
@@ -73,6 +86,9 @@ export const useDispatch = (state: Components.ContextState): [state: Components.
 		selectNode,
 		updateNodePrevious,
 		createOutputPoint,
+		createInputPoint,
+		deleteNode,
+		updatePoint,
 	};
 
 	const handle = (type: keyof Actions, payload?: any) => {
@@ -105,10 +121,22 @@ export const useDispatch = (state: Components.ContextState): [state: Components.
 					draf = createOutputPoint(payload, state);
 					actions.renderNode(draf);
 					break;
+				case "createInputPoint":
+					draf = createInputPoint(payload, state);
+					actions.renderNode(draf);
+					break;
+				case "deleteNode":
+					draf = deleteNode(payload, state);
+					actions.renderNode(draf);
+					break;
+				case "updatePoint":
+					draf = updatePoint(payload, state);
+					break;
 				default:
 					break;
 			}
 		});
+		// console.log(JSON.stringify(state.nodes, null, 2));
 
 		setState(state);
 	};

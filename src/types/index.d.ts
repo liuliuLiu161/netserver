@@ -8,6 +8,9 @@ declare namespace Common {
 
 		//Node cache Data
 		cache?: any;
+
+		//Node Auxiliary structure
+		auxiliary?: ResultType;
 	}
 
 	interface NodeStyle {
@@ -26,9 +29,10 @@ declare namespace Common {
 		previous?: Previous[];
 
 		//Next nodes points
-		next: {
-			[code: string]: { pointCode: string; style: LineStyle };
-		};
+		next?: {
+			code: string;
+			index: number;
+		}[];
 
 		//Connection points
 		point?: Points;

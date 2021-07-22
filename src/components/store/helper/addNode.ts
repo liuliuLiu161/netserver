@@ -7,7 +7,7 @@ const addNode: Common.ReducerHelper<{ style: Common.NodeStyle }> = (payload, sta
 		style: { ...style, zIndex: Object.keys(state.nodes).length },
 		data: {},
 		previous: [],
-		next: {},
+		next: [],
 	};
 
 	const nodesCount = Object.keys(state.nodes).length;
