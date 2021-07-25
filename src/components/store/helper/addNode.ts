@@ -1,11 +1,12 @@
 import * as uuid from "uuid";
 
-const addNode: Common.ReducerHelper<{ style: Common.NodeStyle }> = (payload, state) => {
-	const { style } = payload;
+const addNode: Common.ReducerHelper<{ style: Common.NodeStyle; type: Common.NodeType }> = (payload, state) => {
+	const { style, type } = payload;
 	const code = uuid.v4();
 	const node: Common.Nodes = {
 		style: { ...style, zIndex: Object.keys(state.nodes).length },
 		data: {},
+		type,
 		previous: [],
 		next: [],
 	};

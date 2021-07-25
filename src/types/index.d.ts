@@ -22,12 +22,36 @@ declare namespace Common {
 		color?: string;
 	}
 
+	type NodeType = "data" | "calc";
+
+	type NodeOperation = "range-map" | "plus" | "unknow";
+
+	// interface NodeOperationAuxiliary {
+	//   plus:{
+	//     type: ''
+	//   }
+	// }
+	interface PlusOperationAuxiliary {
+		name: "plus";
+		type: "string" | "math";
+		value: string | number;
+	}
+
+	interface RangeOperationAuxiliary {
+		name: "range-map";
+		range: number[];
+	}
+
+	type OperationAuxiliary = RangeOperationAuxiliary | PlusOperationAuxiliary;
+
 	// type Node = NodeStyle & NodeData;
 	interface Nodes {
 		style: NodeStyle;
 		data: NodeData;
 		previous?: Previous[];
-
+		type: NodeType;
+		operation?: NodeOperation;
+		operationAuxiliary?: any;
 		//Next nodes points
 		next?: {
 			code: string;
@@ -62,6 +86,36 @@ declare namespace Common {
 	interface ReducerHelper<T> {
 		(payload: T, state: Components.ContextState): Components.ContextState;
 	}
+
+	interface Actions {
+		addNode: ReducerHelper<{
+			style: NodeStyle;
+			type: NodeType;
+		}>;
+		updateNodes: ReducerHelper<{
+			x: number;
+			y: number;
+		}>;
+		renderNode(state: Components.ContextState): void;
+		initialCanvas: ReducerHelper<Components.ContextState["canvas"]>;
+		selectNode: ReducerHelper<{ x: number; y: number }>;
+		updateNodePrevious: ReducerHelper<{
+			nodeCode: string;
+			pointCode: string;
+			currentPointCode: string;
+		}>;
+		// createOutputPoint:ReducerHelper<{ source:ResultType; type: "input" | "output"; sourceData: any }>;
+		// createInputPoint:ReducerHelper<{ path: string; type: "input" | "output" }>;
+		createPoint: ReducerHelper<{ path: string; type: "input" | "output" }>;
+		deleteNode: ReducerHelper<string>;
+		updatePoint: ReducerHelper<{
+			pointCode: string;
+			point: Partial<Common.Point>;
+		}>;
+		updateNodeDataCache: ReducerHelper<any>;
+	}
+
+	type Action = (type: keyof Actions, payload?: any) => void;
 
 	enum Colors {
 		PRIMART_COLOR,
@@ -152,9 +206,7 @@ declare namespace Components {
 	type ConnectComponent = <P = {}>(C: React.FC<P>) => React.FC<P>;
 
 	type Connect = <P = {}>(
-		dependence: (
-			state: ContextState
-		) => {
+		dependence: (state: ContextState) => {
 			[key: string]: any;
 		}
 	) => ConnectComponent<P>;

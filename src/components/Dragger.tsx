@@ -8,8 +8,8 @@ const Dragger: React.FC<Components.ContextState["dragger"]> = (props) => {
 			const { style } = node;
 			const { x, y, height, width } = style;
 			const newStyle = {
-				left: x - 2.5 + "px",
-				top: y - 2.5 + "px",
+				left: x - 2.8 + "px",
+				top: y - 2.8 + "px",
 				height: height + 4,
 				width: width + 4,
 			};

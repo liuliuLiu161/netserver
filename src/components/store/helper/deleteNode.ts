@@ -12,7 +12,6 @@ const deleteNode: Common.ReducerHelper<string> = (payload, state) => {
 	}
 
 	delete state.nodes[payload];
-	console.log(Object.keys(state.nodes));
 
 	return state;
 };

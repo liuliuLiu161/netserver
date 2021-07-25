@@ -1,3 +1,5 @@
+import { pointRadin } from "./constant";
+
 export const calcPointCoord = (points: Common.Points, nodeStyle: Common.NodeStyle) => {
 	const pointCodes = Object.keys(points);
 	const pointCount = pointCodes.length;
@@ -7,11 +9,13 @@ export const calcPointCoord = (points: Common.Points, nodeStyle: Common.NodeStyl
 	for (let i = 0; i < pointCount; i++) {
 		const code = pointCodes[i];
 		const { type } = points[code];
-		const radin = 7; // TODO: Point radin is editorable
+		const radin = pointRadin; // TODO: Point radin is editorable
 		result[code] = { x: 0, y: 0 };
 		if (type === "input") {
 			result[code].x = x + radin;
 		} else {
+			console.log("trigger");
+
 			result[code].x = x + width - radin;
 		}
 		result[code].y = y + (i + 1) * (pointGap - radin);

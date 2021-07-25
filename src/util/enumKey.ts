@@ -20,10 +20,10 @@ const enumKey = <T>(val: T): Common.ResultType => {
 		// console.log(val);
 
 		if (Array.isArray(val)) {
-			return val.forEach((item, index) => {
+			return val.forEach((item) => {
 				const nextKey = `${key}[]`;
 				// const next = val[item];
-				// setResult(result, nextKey, item);
+				setResult(result, nextKey, item);
 				return recuObj(item, nextKey, result);
 			});
 		} else if (isObject(val)) {
@@ -31,7 +31,7 @@ const enumKey = <T>(val: T): Common.ResultType => {
 
 			return keys.forEach((item) => {
 				const nextKey = key ? `${key}.${item}` : item;
-				// setResult(result, nextKey, val[item]);
+				setResult(result, nextKey, val[item]);
 				const next = val[item];
 				return recuObj(next, nextKey, result);
 			});

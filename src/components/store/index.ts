@@ -9,9 +9,11 @@ import { useState } from "react";
 import selectNode from "./helper/selectNode";
 // import { sampleData } from "__test__/nodeData";
 import updateNodePrevious from "./helper/updateNodePrevious";
-import { createOutputPoint, createInputPoint } from "./helper/createPoint";
+import { createPoint } from "./helper/createPoint";
 import deleteNode from "./helper/deleteNode";
 import updatePoint from "./helper/updatePoint";
+import updateNodeDataCache from "./helper/updateNodeDataCache";
+
 export const initialState: Components.ContextState = {
 	canvas: null,
 	attr: {
@@ -32,67 +34,42 @@ export const initialState: Components.ContextState = {
 	},
 };
 
-interface Actions {
-	addNode: Common.ReducerHelper<{
-		style: Common.NodeStyle;
-	}>;
-	updateNodes: Common.ReducerHelper<{
-		x: number;
-		y: number;
-	}>;
-	renderNode(state: Components.ContextState): void;
-	initialCanvas: Common.ReducerHelper<Components.ContextState["canvas"]>;
-	selectNode: Common.ReducerHelper<{ x: number; y: number }>;
-	updateNodePrevious: Common.ReducerHelper<{
-		nodeCode: string;
-		pointCode: string;
-		currentPointCode: string;
-	}>;
-	createOutputPoint: Common.ReducerHelper<{ source: Common.ResultType; type: "input" | "output"; sourceData: any }>;
-	createInputPoint: Common.ReducerHelper<{ path: string; type: "input" | "output" }>;
-	deleteNode: Common.ReducerHelper<string>;
-	updatePoint: Common.ReducerHelper<{
-		pointCode: string;
-		point: Partial<Common.Point>;
-	}>;
-}
-
-export type Action = (type: keyof Actions, payload?: any) => void;
-
 const renderNode = (state: Components.ContextState) => {
 	const { canvas: ctx, nodes } = state;
 	if (!ctx) return;
+	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	renderNodes(ctx, nodes);
 };
 
 const initialCanvas: Common.ReducerHelper<Components.ContextState["canvas"]> = (context, state) => {
 	state.canvas = context;
+
 	return state;
 };
 
-export const useDispatch = (state: Components.ContextState): [state: Components.ContextState, action: Action] => {
-	const [initialState, setState] = useState(state);
+export const useDispatch = (): [state: Components.ContextState, action: Common.Action] => {
+	const [newState, setState] = useState(initialState);
 
 	// const needRenderNodes = (type: string) => {
 	// 	const types = ["addNode", "updateNodes", "updateNodePrevious", "createOutputPoint", "createInputPoint"];
 	// 	return types.includes(type);
 	// };
 
-	const actions: Actions = {
+	const actions: Common.Actions = {
 		addNode,
 		updateNodes,
 		renderNode,
 		initialCanvas,
 		selectNode,
 		updateNodePrevious,
-		createOutputPoint,
-		createInputPoint,
+		createPoint,
 		deleteNode,
 		updatePoint,
+		updateNodeDataCache,
 	};
 
-	const handle = (type: keyof Actions, payload?: any) => {
-		const state = produce(initialState, (draf: any) => {
+	const handle = (type: keyof Common.Actions, payload?: any) => {
+		const state = produce(newState, (draf: any) => {
 			const state: Components.ContextState = draf;
 			switch (type) {
 				case "addNode":
@@ -117,12 +94,8 @@ export const useDispatch = (state: Components.ContextState): [state: Components.
 					draf = actions.updateNodePrevious(payload, state);
 					actions.renderNode(draf);
 					break;
-				case "createOutputPoint":
-					draf = createOutputPoint(payload, state);
-					actions.renderNode(draf);
-					break;
-				case "createInputPoint":
-					draf = createInputPoint(payload, state);
+				case "createPoint":
+					draf = createPoint(payload, state);
 					actions.renderNode(draf);
 					break;
 				case "deleteNode":
@@ -132,14 +105,17 @@ export const useDispatch = (state: Components.ContextState): [state: Components.
 				case "updatePoint":
 					draf = updatePoint(payload, state);
 					break;
+				case "updateNodeDataCache":
+					draf = updateNodeDataCache(payload, state);
+					break;
 				default:
 					break;
 			}
 		});
-		// console.log(JSON.stringify(state.nodes, null, 2));
+		// console.log(JSON.stringify(state, null, 2));
 
 		setState(state);
 	};
 
-	return [initialState, handle];
+	return [newState, handle];
 };

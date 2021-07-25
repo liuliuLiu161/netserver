@@ -7,13 +7,16 @@
 }
 .menuList{
   display: flex;
-  flex: 1;
-  justify-content: center;
+  /* flex: 1; */
+  height: 44px;
+  justify-content: space-between;
   color: #fff;
-  border: #222 solid;
+  border: 1px #222 solid;
+  align-items: flex-end;
+  padding: 0px 3px;
 }
 .menuList > div{
-  background-color: #222;
+  /* background-color: #222; */
   display: flex;
   align-items: center;
   height:34px;
@@ -21,19 +24,70 @@
 }
 .mainContainer{
   display: flex;
+  flex: 1;
 }
 .config{
   flex:1;
   box-sizing: border-box;
-  border: #222 1px dashed;
+  border-right: #222 1px dashed;
 }
 .canvasContainer {
-  flex:3;
   position: relative;
+  height: 100%;
+  width: 100%;
 }
 .drag{
   position: absolute;
   border: #222 dashed 1px;
   top: 0;
   left: 0;
+  cursor: move;
+}
+
+details {
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    padding: .5em .5em 0;
+    width: 90%;
+    margin: 5px;
+    cursor: pointer;
+}
+
+select{
+  border-radius: 4px;
+    padding: .5em ;
+    margin: 5px;
+}
+select::after{
+  font-weight: bold;
+    font-size: 14px;
+}
+
+summary {
+    font-weight: bold;
+    margin: -.5em -.5em 0;
+    padding: .5em;
+    font-size: 14px;
+}
+summary::marker{
+  color: #aaa;
+}
+
+details[open] summary::marker{
+  color: #222;
+
+}
+
+details[open] {
+    padding: .5em;
+}
+
+details[open] summary {
+    border-bottom: 1px solid #aaa;
+    margin-bottom: .5em;
+}
+
+input{
+    padding: .5em;
+    
 }
