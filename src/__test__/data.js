@@ -1,4 +1,4 @@
-export default {
+const testData = {
 	backgroundColor: "",
 	grid: {
 		containLabel: true,
@@ -24,3 +24,4 @@ export default {
 		{ name: "test10" },
 	],
 };
+export default testData;

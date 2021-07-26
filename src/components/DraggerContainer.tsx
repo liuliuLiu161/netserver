@@ -47,7 +47,7 @@ const DraggerContainer: React.FC<{
 				height: rect.height,
 			});
 		}
-	}, []);
+	}, []); //eslint-disable-line
 
 	// useEffect(() => {
 	// 	const canvas = canvasRef.current;

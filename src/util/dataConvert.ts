@@ -53,28 +53,28 @@ const generateData = (auxiliary: Common.ResultType, auxiliaryKey: string, result
 	return result;
 };
 
-const plusOperation = (aux: Common.PlusOperationAuxiliary) => {
-	return "value";
-};
-const rangesOperation = (val: any[], range: number[]) => {
-	const start = range[0];
-	const end = range[1];
-	const newData = val.slice(start, end + 1);
-	return newData.reduce((prev, cur, index) => {
-		return { ...prev, [`val[${index}]`]: cur };
-	}, {});
-};
+// const plusOperation = (aux: Common.PlusOperationAuxiliary) => {
+// 	return "value";
+// };
+// const rangesOperation = (val: any[], range: number[]) => {
+// 	const start = range[0];
+// 	const end = range[1];
+// 	const newData = val.slice(start, end + 1);
+// 	return newData.reduce((prev, cur, index) => {
+// 		return { ...prev, [`val[${index}]`]: cur };
+// 	}, {});
+// };
 
-const resolveCalcNode = (operation: Common.OperationAuxiliary["name"], operationAuxiliary: Common.OperationAuxiliary, path: string, prevPath: string, auxiliary: Common.ResultType) => {
-	switch (operation) {
-		case "plus":
-			return plusOperation(operationAuxiliary as Common.PlusOperationAuxiliary);
-		case "range-map":
-			return rangesOperation(auxiliary[prevPath] as any[], (operationAuxiliary as Common.RangeOperationAuxiliary).range);
-		default:
-			break;
-	}
-};
+// const resolveCalcNode = (operation: Common.OperationAuxiliary["name"], operationAuxiliary: Common.OperationAuxiliary, path: string, prevPath: string, auxiliary: Common.ResultType) => {
+// 	switch (operation) {
+// 		case "plus":
+// 			return plusOperation(operationAuxiliary as Common.PlusOperationAuxiliary);
+// 		case "range-map":
+// 			return rangesOperation(auxiliary[prevPath] as any[], (operationAuxiliary as Common.RangeOperationAuxiliary).range);
+// 		default:
+// 			break;
+// 	}
+// };
 
 export const convertNodeMap = (previous: Common.Previous[], nodes: Common.NodesMap, currentNode: Common.Nodes) => {
 	for (const item of previous) {

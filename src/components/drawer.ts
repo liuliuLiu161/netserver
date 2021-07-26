@@ -13,7 +13,7 @@ export const drawNode = (props: Common.NodeProps<Common.Nodes>) => {
 	ctx.fillStyle = type === "data" ? "#ceecf5" : "#c1e344";
 	ctx.strokeStyle = "#111";
 	roundRect(ctx, x, y, width, height, 5);
-	ctx.font = type === "data" ? "bold 12px Microsoft-YaHei" : "bold 12px Microsoft-YaHei italic";
+	ctx.font = type === "data" ? "bold 12px Microsoft-YaHei" : "italic bold 12px Microsoft-YaHei";
 	ctx.fillStyle = "#222";
 	const operationText = operation || "unknow";
 	const text = type === "data" ? "defult-data" : operationText;
